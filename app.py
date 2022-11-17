@@ -67,9 +67,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-@app.route("/",methods=['GET', 'POST'])
-@app.route("/login",methods=['GET', 'POST'])
-def home():
+@app.route("/")
+@app.route("/login", methods=['GET', 'POST'])
+def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
@@ -81,7 +81,7 @@ def home():
             return redirect(next_page) if next_page else redirect(url_for('dashboard'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('home.html', title='Login', form=form)
+    return render_template('home.html', form=form)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -100,3 +100,6 @@ def register():
 @app.route("/dashboard")
 def dashboard():
 	return render_template('dashboard.html')
+
+if __name__=='__main__':
+    app.run(debug=True)

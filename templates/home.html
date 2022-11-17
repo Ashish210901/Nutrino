@@ -61,8 +61,15 @@
                                 <a href="#">Forgot Password?</a>
                             </small>
                         </form>
-                        <p class="mt-25">Not a member, <a href="/register">Click Here</a></p>
+                        <p class="mt-25">Already a member, <a href="/login">Click Here</a></p>
                     </div>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <p>{{msg}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
                 </div>
 
             </div>
