@@ -139,7 +139,7 @@ file.addEventListener('change', function(){
                         {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for msg in messages %}
-                                <p>{{msg}}</p>
+                                <p class="alert alert-success" role="alert">{{msg}}</p>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}

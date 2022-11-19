@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from flask_bcrypt import Bcrypt
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -10,7 +11,7 @@ from flask_migrate import Migrate
 from flask_login import UserMixin
 from flask import render_template, url_for, flash, redirect, request,session
 from flask_login import login_user, current_user, logout_user, login_required
-from api import image
+from api_image import image
 
 
 app = Flask(__name__)
@@ -86,10 +87,16 @@ class ProfileForm(FlaskForm):
                            validators=[DataRequired()])
     weight = StringField('Weight',
                         validators=[DataRequired()])
-    height = StringField('Height',
+    height = StringField('Height(In metres)',
                         validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Add')
+
+class ImageForm(FlaskForm):
+    image = FileField('Image Upload',
+                           validators=[FileAllowed(['jpg','jpeg','png'])])
+
+    submit = SubmitField('Check')
 
 
 
@@ -116,7 +123,7 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user=User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.a9dd(user)
+        db.session.add(user)
         db.session.commit()
         flash("User added Successfully")
         return redirect(url_for('login'))
@@ -124,7 +131,7 @@ def register():
     
 	
 
-@app.route("/dashboard")
+@app.route("/dashboard",methods=['GET', 'POST'])
 def dashboard():
     image_file=url_for('static',filename='pics/'+ current_user.image_file)
     return render_template('dashboard.html', image_file=image_file)
@@ -133,6 +140,11 @@ def dashboard():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.route("/image")
+def image():
+    return render_template('image.html')
 
 @app.route("/profile",methods=['GET', 'POST'])
 def profile():
@@ -147,9 +159,10 @@ def profile():
         details=detail(weight=weight, height=height, user_id=current_user.id,bmi=bmi)
         db.session.add(details)
         db.session.commit()
-        login_user(details,remember=form.remember.data)
         flash("Your BMI is "+str(bmi))
     return render_template('profile.html',form = form)
+
+
 
 if __name__=='__main__':
     app.run(debug=True)
