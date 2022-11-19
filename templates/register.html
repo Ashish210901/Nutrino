@@ -22,7 +22,7 @@
                         <form action="{{ url_for('register') }}", method="post">
                             {{ form.hidden_tag() }}
                             <fieldset class="form-group">
-                                <legend class="border-bottom mb-4">Log In</legend>
+                                <legend class="border-bottom mb-4">Register</legend>
                                 <div class="form-group">
                                     {{ form.username.label(class="form-control-label") }}
                                     {% if form.username.errors %}
@@ -62,9 +62,11 @@
                                         {{ form.password(class="form-control form-control-lg") }}
                                     {% endif %}
                                 </div>
-                            </fieldset>
-                            <div class="form-group">
-                                {{ form.submit(class="btn btn-outline-info") }}
+                            </fieldset><br>
+                            <div class="d-grid gap-2">
+                                <div class="form-group">
+                                    {{ form.submit(class="btn btn-outline-info") }}
+                                </div>
                             </div>
                             <small class="text-muted ml-2">
                                 <a href="#">Forgot Password?</a>
